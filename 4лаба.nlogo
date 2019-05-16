@@ -1,4 +1,4 @@
-globals [time  kol maxim rabtime l li i j bol q y labk kolz]
+globals [kol l li j labk]
 breed [komps komp]
 breed [ps p]
 breed [zs zak]
@@ -9,17 +9,18 @@ to setup
     clear-all
 reset-ticks
   ;let i 0
-  create-komps kolvo_k [ layout-circle sort turtles 10 ]
+  create-komps kolvo_t [ layout-circle sort turtles 10 ]
   ;; Выставляем черепашек в круг радиусом 12 и сразу сортируем их в порядке возрастания
-  ask turtles [ set shape "telephone" set color 15 set label who + 1 set size 2] ;; Делаем черепашек в виде круга, задаем им цвет и свойтву label даем значение в виде порядкового номера
+  ask turtles [ set shape "telephone" set color 15 set label who + 1 set size 2 set label-color black] ;; Делаем черепашек в виде круга, задаем им цвет и свойтву label даем значение в виде порядкового номера
 
-   create-ps kolvo_l [ set shape "person" ]
+   create-ps kolvo_l [ set shape "person service" set size 2 ]
   ;Каждый работает на компе определенное количество времени, например, 3 часа,тогда он освобождает место и идет курить(например, 10 минут).
   ; когда возвращается после перекура, ему приходится вставать в очередь
 
     ask ps [setxy -15 random-ycor]
-  ask ps [set label who]
-set labk kolvo_k
+  ask ps [set label who set label-color black]
+set labk kolvo_t
+  ask patches [set pcolor 139]
 
 ;ask ps with [who > kolvo_k + 2 ] [setxy -15 random-ycor]
 
@@ -31,8 +32,6 @@ to go
 
   Let t_zak random-poisson 15
   let t_obr random-poisson 20
- ; let kolBox random kolvo_k
- ; if kolBox = 0 [Set kolBox kolBox + 1]
   set-current-plot "graf"
   plot count ps
  ; ask ps [set label who]
@@ -44,18 +43,18 @@ to go
  ; user-message (kol)
  ; show (word "kol = "kol)
 ;  show (word "rabtime = "rabtime)
-  if count ps > 0[ if count zs < kolvo_k [ if t_zak > 20 [create-zs 1 [set shape "box" setxy 0 0 jump 8]] set kolz kolz + 1]]
+  if count ps > 0[ if count zs < kolvo_t [ if t_zak > 20 [create-zs 1 [set shape "box" setxy 0 0 jump 8]] ]]
  ; ask zs [set label who]
 
     ;user-message (t_obr) user-message (l + kolvo_k + kolvo_l)
-   if count zs > 0 [ if t_obr > 20 [ask zs with [who = l + kolvo_k + kolvo_l + j][;user-message (word "номер заказа= " (l + kolvo_k + kolvo_l + j))
+   if count zs > 0 [ if t_obr > 20 [ask zs with [who = l + kolvo_t + kolvo_l + j][;user-message (word "номер заказа= " (l + kolvo_k + kolvo_l + j))
     setxy -13 random-ycor;set heading towards turtle 1 ; face ps 1
      ; setxy 0 0 jump 3
     ]
     if count zs >=  2 [;user-message (word "курьер № = " (kolvo_k + li))
-      ifelse li < kolvo_l  [ask ps with [label = kolvo_k + li] [die] set li li + 1][ask ps with [label = labk] [die] ]
+      ifelse li < kolvo_l  [ask ps with [label = kolvo_t + li] [die] set li li + 1][ask ps with [label = labk] [die] ]
                     ask zs [die]]
-   ; set li li + kolBox
+
     set l l + 1
   ]
   ]
@@ -95,15 +94,12 @@ to go
  if count ps < kolvo_l [
 
   if kol > 20 [
-      create-ps 1 [  set label labk setxy -15 random-ycor set shape "person"  ; set label who set bol who
+      create-ps 1 [  set label labk setxy -15 random-ycor set shape "person service" set size 2 set label-color black ; set label who set bol who
        set j j + 1; user-message (j) user-message (who)
        set labk labk + 1 ;user-message (labk)
     ]
-  ;    ask turtles with [who = kolz + kolvo_k + kolvo_l][set label 3]
-    ;  ask ps [set label 3]
 
-
-      if labk = kolvo_l + kolvo_k [set labk kolvo_k]
+      if labk = kolvo_l + kolvo_t [set labk kolvo_t]
   ;  ask ps with [who = bol - 4 ][layout-circle p 8]
   ]
 
@@ -119,9 +115,6 @@ to go
 ;;  ask ps with [who > kolvo_l + j - 1 ][die]
 ;; ]
 
-  ;if rabtime > 60 [ask ps with [who  = o ][die]]
-  ;if time > 10 [create-ps 1 [setxy -15 random-ycor set shape "person" ]]
- ;if count ps > kolvo_k + 10 [ask p random count ps[die]]
 
 ;user-message (timer)
 
@@ -205,8 +198,8 @@ SLIDER
 20
 199
 53
-kolvo_k
-kolvo_k
+kolvo_t
+kolvo_t
 3
 50
 3.0
@@ -464,6 +457,26 @@ Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300
 Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
+
+person service
+false
+0
+Polygon -7500403 true true 180 195 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285
+Polygon -1 true false 120 90 105 90 60 195 90 210 120 150 120 195 180 195 180 150 210 210 240 195 195 90 180 90 165 105 150 165 135 105 120 90
+Polygon -1 true false 123 90 149 141 177 90
+Rectangle -7500403 true true 123 76 176 92
+Circle -7500403 true true 110 5 80
+Line -13345367 false 121 90 194 90
+Line -16777216 false 148 143 150 196
+Rectangle -16777216 true false 116 186 182 198
+Circle -1 true false 152 143 9
+Circle -1 true false 152 166 9
+Rectangle -16777216 true false 179 164 183 186
+Polygon -2674135 true false 180 90 195 90 183 160 180 195 150 195 150 135 180 90
+Polygon -2674135 true false 120 90 105 90 114 161 120 195 150 195 150 135 120 90
+Polygon -2674135 true false 155 91 128 77 128 101
+Rectangle -16777216 true false 118 129 141 140
+Polygon -2674135 true false 145 91 172 77 172 101
 
 plant
 false
