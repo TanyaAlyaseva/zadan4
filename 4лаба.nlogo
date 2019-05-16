@@ -1,4 +1,4 @@
-globals [time  kol maxim rabtime l i j bol q y ]
+globals [time  kol maxim rabtime l li i j bol q y labk kolz]
 breed [komps komp]
 breed [ps p]
 breed [zs zak]
@@ -11,14 +11,15 @@ reset-ticks
   ;let i 0
   create-komps kolvo_k [ layout-circle sort turtles 10 ]
   ;; Выставляем черепашек в круг радиусом 12 и сразу сортируем их в порядке возрастания
-  ask turtles [ set shape "circle" set color 15 set label who + 1 ] ;; Делаем черепашек в виде круга, задаем им цвет и свойтву label даем значение в виде порядкового номера
+  ask turtles [ set shape "telephone" set color 15 set label who + 1 set size 2] ;; Делаем черепашек в виде круга, задаем им цвет и свойтву label даем значение в виде порядкового номера
 
    create-ps kolvo_l [ set shape "person" ]
   ;Каждый работает на компе определенное количество времени, например, 3 часа,тогда он освобождает место и идет курить(например, 10 минут).
   ; когда возвращается после перекура, ему приходится вставать в очередь
 
     ask ps [setxy -15 random-ycor]
-
+  ask ps [set label who]
+set labk kolvo_k
 
 ;ask ps with [who > kolvo_k + 2 ] [setxy -15 random-ycor]
 
@@ -30,65 +31,86 @@ to go
 
   Let t_zak random-poisson 15
   let t_obr random-poisson 20
+ ; let kolBox random kolvo_k
+ ; if kolBox = 0 [Set kolBox kolBox + 1]
   set-current-plot "graf"
   plot count ps
-;  ask ps [set label who]
-    set rabtime random 60
+ ; ask ps [set label who]
+
+
+
  ; user-message (rabtime)
-  set kol random 15
+  set kol random-poisson 15
  ; user-message (kol)
-  show (word "kol = "kol)
-  show (word "rabtime = "rabtime)
-  if t_zak > 20 [create-zs 1 [set shape "box" setxy 0 0 jump 8]]
-  if count zs > 0
-  [  ;user-message (t_obr) user-message (l + kolvo_k + kolvo_l)
-    if t_obr > 20 [ask zs with [who = l + kolvo_k + kolvo_l][set heading towards turtle 1 ;face ps 1
+ ; show (word "kol = "kol)
+;  show (word "rabtime = "rabtime)
+  if count ps > 0[ if count zs < kolvo_k [ if t_zak > 20 [create-zs 1 [set shape "box" setxy 0 0 jump 8]] set kolz kolz + 1]]
+ ; ask zs [set label who]
+
+    ;user-message (t_obr) user-message (l + kolvo_k + kolvo_l)
+   if count zs > 0 [ if t_obr > 20 [ask zs with [who = l + kolvo_k + kolvo_l + j][;user-message (word "номер заказа= " (l + kolvo_k + kolvo_l + j))
+    setxy -13 random-ycor;set heading towards turtle 1 ; face ps 1
      ; setxy 0 0 jump 3
-    ] set l l + 1]
-
-
+    ]
+    if count zs >=  2 [;user-message (word "курьер № = " (kolvo_k + li))
+      ifelse li < kolvo_l  [ask ps with [label = kolvo_k + li] [die] set li li + 1][ask ps with [label = labk] [die] ]
+                    ask zs [die]]
+   ; set li li + kolBox
+    set l l + 1
   ]
+  ]
+
+
+
+
  ; if kolvo_l > kolvo_k [ask ps with [who  = kolvo_k ] [layout-circle ps 8]]
  ;plot count turtles
 
  ;user-message (l)
  ; set-current-plot-pen "ps"
  ; user-message (timer)
-  if count ps > kolvo_k[
-  if rabtime > 50 [
+;;  if count ps > kolvo_k[
+;;  if rabtime > 50 [
     ;user-message (l)
 
     ;if l < kolvo_k [set l l + kolvo_k]
-    ask ps with [who  = q + kolvo_k][die]
+ ;;   ask ps with [who  = q + kolvo_k][die]
    ; ask ps with [who  =  q + 2 * kolvo_k][setxy 0 0 jump 8]
     ;user-message (l)
-   set i 100
+ ;;  set i 100
   ;  if kol > 5 [create-ps 1 [setxy -15 random-ycor set shape "person"   set label who
   ;    set label-color red set j j + 1 ;user-message (j) user-message (who)
   ;  ]]
-    set q q + 1
+;;    set q q + 1
 
 
 ;   create-ps 1 [setxy -15 random-ycor set shape "person"   set label who set bol who
 ;    set label-color red set j j + 1; user-message (j) user-message (who)
  ;   ]
 
-  ]
-  ]
+;;  ]
+;;  ]
 
 
  if count ps < kolvo_l [
 
-  if kol > 10 [create-ps 1 [setxy -15 random-ycor set shape "person"  ; set label who set bol who
-      set label-color red set j j + 1; user-message (j) user-message (who)
+  if kol > 20 [
+      create-ps 1 [  set label labk setxy -15 random-ycor set shape "person"  ; set label who set bol who
+       set j j + 1; user-message (j) user-message (who)
+       set labk labk + 1 ;user-message (labk)
     ]
+  ;    ask turtles with [who = kolz + kolvo_k + kolvo_l][set label 3]
+    ;  ask ps [set label 3]
+
+
+      if labk = kolvo_l + kolvo_k [set labk kolvo_k]
   ;  ask ps with [who = bol - 4 ][layout-circle p 8]
   ]
 
   ]
 
-
-
+ ; create-ps 1 [set label labk]
+; user-message (labk)
  ; user-message (i)
 
 ;;  if count ps > kolvo_l [;user-message (i)
@@ -495,6 +517,25 @@ Circle -16777216 true false 30 30 240
 Circle -7500403 true true 60 60 180
 Circle -16777216 true false 90 90 120
 Circle -7500403 true true 120 120 60
+
+telephone
+false
+0
+Polygon -7500403 true true 75 273 60 255 60 195 84 165 75 165 45 150 45 120 60 90 105 75 195 75 240 90 255 120 255 150 223 165 215 165 240 195 240 255 226 274
+Polygon -16777216 false false 75 273 60 255 60 195 105 135 105 120 105 105 120 105 120 120 180 120 180 105 195 105 195 135 240 195 240 255 225 273
+Polygon -16777216 false false 81 165 74 165 44 150 44 120 59 90 104 75 194 75 239 90 254 120 254 150 218 167 194 135 194 105 179 105 179 120 119 120 119 105 104 105 104 135 81 166 78 165
+Rectangle -16777216 false false 120 165 135 180
+Rectangle -16777216 false false 165 165 180 180
+Rectangle -16777216 false false 142 165 157 180
+Rectangle -16777216 false false 165 188 180 203
+Rectangle -16777216 false false 142 188 157 203
+Rectangle -16777216 false false 120 188 135 203
+Rectangle -16777216 false false 120 210 135 225
+Rectangle -16777216 false false 142 210 157 225
+Rectangle -16777216 false false 165 210 180 225
+Rectangle -16777216 false false 120 233 135 248
+Rectangle -16777216 false false 142 233 157 248
+Rectangle -16777216 false false 165 233 180 248
 
 tree
 false
