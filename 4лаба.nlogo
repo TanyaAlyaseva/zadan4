@@ -41,13 +41,15 @@ to go
  ; ask zs [set label who]
 
     ;user-message (t_obr) user-message (l + kolvo_k + kolvo_l)
-   if count zs > 0 [ if t_obr > 20 [ask zs with [who = l + kolvo_t + kolvo_l + j][;user-message (word "номер заказа= " (l + kolvo_k + kolvo_l + j))
+   if count zs > 0 [ if t_obr > 10 [ask zs with [who = l + kolvo_t + kolvo_l + j][;user-message (word "номер заказа= " (l + kolvo_k + kolvo_l + j))
     setxy -13 random-ycor;set heading towards turtle 1 ; face ps 1
      ; setxy 0 0 jump 3
     ]
     if count zs >  1 [;user-message (word "курьер № = " (kolvo_k + li))
-      ifelse li < kolvo_l  [ask ps with [label = kolvo_t + li] [die] set li li + 1][;user-message (labk)
-        ask ps with [label = labk ] [die] ]
+      ifelse li < kolvo_l  [ask ps with [label = kolvo_t + li] [die]  ask zs [die] set li li + 1][;user-message (labk)
+      ;  ask ps with [label = labk ] [die]
+        ask one-of ps [die]
+      ]
                     ask zs [die]]
 
     set l l + 1
@@ -57,7 +59,8 @@ to go
  if count ps < kolvo_l [
 
   if kol > 22 [
-      create-ps 1 [  set label labk setxy -15 random-ycor set shape "person service" set size 2 set label-color black ; set label who set bol who
+      create-ps 1 [   ;set label labk
+        setxy -15 random-ycor set shape "person service" set size 2 ; set label-color black ; set label who set bol who
        set j j + 1; user-message (j) user-message (who)
        set labk labk + 1 ;user-message (labk)
     ]
@@ -140,7 +143,7 @@ kolvo_t
 kolvo_t
 3
 50
-3.0
+4.0
 1
 1
 NIL
@@ -155,7 +158,7 @@ kolvo_l
 kolvo_l
 5
 100
-5.0
+7.0
 1
 1
 NIL
