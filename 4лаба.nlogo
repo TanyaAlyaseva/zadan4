@@ -10,7 +10,7 @@ to setup
 reset-ticks
   ;let i 0
   create-komps kolvo_t [ layout-circle sort turtles 10 ]
-  ;; Выставляем черепашек в круг радиусом 12 и сразу сортируем их в порядке возрастания
+  ;; Выставляем черепашек в круг радиусом 10 и сразу сортируем их в порядке возрастания
   ask turtles [ set shape "telephone" set color 15 set label who + 1 set size 2 set label-color black] ;; Делаем черепашек в виде круга, задаем им цвет и свойтву label даем значение в виде порядкового номера
 
    create-ps kolvo_l [ set shape "person service" set size 2 ]
@@ -35,14 +35,8 @@ to go
   set-current-plot "graf"
   plot count ps
  ; ask ps [set label who]
-
-
-
- ; user-message (rabtime)
   set kol random-poisson 15
- ; user-message (kol)
- ; show (word "kol = "kol)
-;  show (word "rabtime = "rabtime)
+
   if count ps > 0[ if count zs < kolvo_t [ if t_zak > 20 [create-zs 1 [set shape "box" setxy 0 0 jump 8]] ]]
  ; ask zs [set label who]
 
@@ -51,49 +45,18 @@ to go
     setxy -13 random-ycor;set heading towards turtle 1 ; face ps 1
      ; setxy 0 0 jump 3
     ]
-    if count zs >=  2 [;user-message (word "курьер № = " (kolvo_k + li))
-      ifelse li < kolvo_l  [ask ps with [label = kolvo_t + li] [die] set li li + 1][ask ps with [label = labk] [die] ]
+    if count zs >  1 [;user-message (word "курьер № = " (kolvo_k + li))
+      ifelse li < kolvo_l  [ask ps with [label = kolvo_t + li] [die] set li li + 1][;user-message (labk)
+        ask ps with [label = labk ] [die] ]
                     ask zs [die]]
 
     set l l + 1
   ]
   ]
 
-
-
-
- ; if kolvo_l > kolvo_k [ask ps with [who  = kolvo_k ] [layout-circle ps 8]]
- ;plot count turtles
-
- ;user-message (l)
- ; set-current-plot-pen "ps"
- ; user-message (timer)
-;;  if count ps > kolvo_k[
-;;  if rabtime > 50 [
-    ;user-message (l)
-
-    ;if l < kolvo_k [set l l + kolvo_k]
- ;;   ask ps with [who  = q + kolvo_k][die]
-   ; ask ps with [who  =  q + 2 * kolvo_k][setxy 0 0 jump 8]
-    ;user-message (l)
- ;;  set i 100
-  ;  if kol > 5 [create-ps 1 [setxy -15 random-ycor set shape "person"   set label who
-  ;    set label-color red set j j + 1 ;user-message (j) user-message (who)
-  ;  ]]
-;;    set q q + 1
-
-
-;   create-ps 1 [setxy -15 random-ycor set shape "person"   set label who set bol who
-;    set label-color red set j j + 1; user-message (j) user-message (who)
- ;   ]
-
-;;  ]
-;;  ]
-
-
  if count ps < kolvo_l [
 
-  if kol > 20 [
+  if kol > 22 [
       create-ps 1 [  set label labk setxy -15 random-ycor set shape "person service" set size 2 set label-color black ; set label who set bol who
        set j j + 1; user-message (j) user-message (who)
        set labk labk + 1 ;user-message (labk)
@@ -102,33 +65,8 @@ to go
       if labk = kolvo_l + kolvo_t [set labk kolvo_t]
   ;  ask ps with [who = bol - 4 ][layout-circle p 8]
   ]
-
   ]
 
- ; create-ps 1 [set label labk]
-; user-message (labk)
- ; user-message (i)
-
-;;  if count ps > kolvo_l [;user-message (i)
-
-;;    ;ask ps with [who > kolvo_l  + j - 2  ][die]
-;;  ask ps with [who > kolvo_l + j - 1 ][die]
-;; ]
-
-
-;user-message (timer)
-
- ;   set grass count patches with [pcolor = green]
-;  set-current-plot "populations"
- ; set-current-plot-pen "sheep"
-  ;plot count sheep
- ; set-current-plot-pen "wolves"
-;  plot count wolves
- ; if grass? [
- ;   set-current-plot-pen "grass / 4"
-  ;  plot grass / 4  ;; divide by four to keep it within similar
-                    ;; range as wolf and sheep populations
-;  ]
 
 end
 @#$#@#$#@
